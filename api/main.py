@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI, HTTPException
-from api import models, schemas, crud
+from fastapi import Depends, FastAPI, HTTPException, BackgroundTasks
+from api import models, schemas, crud, get_data_from_avito
 from api.db import engine, SessionLocal
+import time
+
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -16,28 +18,42 @@ def get_db():
         db.close()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
 @app.post("/add")
-def register(advert: schemas.Advert, db: Session = Depends(get_db)):
-    db_user = crud.get_advert_by_phrase(db, phrase=advert.phrase)
-    if db_user:
-        raise HTTPException(status_code=400, detail="Advert already registered")
-    crud.register_advert(db=db, advert=advert)
-    return {"message": "registered successfully"}
+def register(advert: schemas.Advert, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    db_record = crud.get_advert_by_phrase(db, phrase=advert.phrase)
+    if db_record:
+        message = "Advert already registered, id='{}'".format(db_record.id)
+        raise HTTPException(status_code=400, detail=message)
+    advert_id = crud.register_advert(db, advert)
+    message = "Advert successfully registered with id = '{}'".format(advert_id)
+    background_tasks.add_task(get_info_every_hour, advert)
+    return {"message": message}
 
 
 @app.get("/get")
 def get(phrase: str, db: Session = Depends(get_db)):
-    db_user = crud.get_advert_by_phrase(db, phrase=phrase)
-    if not db_user:
+    db_record = crud.get_advert_by_phrase(db, phrase=phrase)
+    if db_record:
+        return db_record
+    else:
         raise HTTPException(status_code=400, detail="No such advert")
-    return crud.get_advert_by_phrase(db, phrase=phrase)
+
 
 
 @app.get("/stat")
-def get(phrase: str, db: Session = Depends(get_db)):
-    return {'message':'message'}
+def get():
+    return {'foo': 'bar'}
+
+
+def get_info_every_hour(advert: schemas.Advert, db: Session = Depends(get_db)):
+    i = 1
+    while i<5:
+        advert_stats = get_data_from_avito.get_data_stat(advert)
+        print(advert_stats)
+        try:
+            crud.write_stats(db, advert_stats)
+        except:
+            print('database problem')
+        time.sleep(1)
+        i += 1
+

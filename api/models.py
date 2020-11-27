@@ -11,10 +11,10 @@ class Adverts(Base):
 
 
 class AdvertsStats(Base):
-    __tablename__ = "user_info"
+    __tablename__ = "adverts stats"
 
     id = Column(Integer, primary_key=True, index=True)
-    phrase = Column(String, unique=True)
+    phrase = Column(String)
     location_id = Column(String)
     advert_count = Column(Integer)
     timestamp = Column(DateTime)

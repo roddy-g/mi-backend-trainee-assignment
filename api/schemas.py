@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Advert(BaseModel):
     phrase: str
-    location_id: str
+    location_id: int
 
 
 class AdvertStats(Advert):
