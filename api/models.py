@@ -18,5 +18,3 @@ class AdvertsStats(Base):
     location_id = Column(String)
     advert_count = Column(Integer)
     timestamp = Column(DateTime)
-
-

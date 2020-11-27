@@ -19,7 +19,11 @@ def get_db():
 
 
 @app.post("/add")
-def register(advert: schemas.Advert, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+def register(
+        advert: schemas.Advert,
+        background_tasks: BackgroundTasks,
+        db: Session = Depends(get_db)
+):
     db_record = crud.get_advert_by_phrase(db, phrase=advert.phrase)
     if db_record:
         message = "Advert already registered, id='{}'".format(db_record.id)
@@ -39,21 +43,12 @@ def get(phrase: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="No such advert")
 
 
-
-@app.get("/stat")
-def get():
-    return {'foo': 'bar'}
-
-
 def get_info_every_hour(advert: schemas.Advert, db: Session = Depends(get_db)):
     i = 1
-    while i<5:
+    while i < 5:
         advert_stats = get_data_from_avito.get_data_stat(advert)
         print(advert_stats)
-        try:
-            crud.write_stats(db, advert_stats)
-        except:
-            print('database problem')
+        crud.write_stats(db, advert_stats)
+        print('database problem')
         time.sleep(1)
         i += 1
-

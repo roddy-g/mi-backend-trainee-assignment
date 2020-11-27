@@ -1,4 +1,3 @@
-from typing import List
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -11,5 +10,3 @@ class Advert(BaseModel):
 class AdvertStats(Advert):
     advert_count: int
     timestamp: datetime
-
-
