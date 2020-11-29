@@ -47,7 +47,8 @@ def get_advert_stat(db: Session, id: int, interval: str):
         filter(models.AdvertsStats.location_id == advert.location_id). \
         filter(models.AdvertsStats.timestamp > date_from).scalar()
     average_count = db.query(
-        func.sum(models.AdvertsStats.advert_count) / func.count(models.AdvertsStats.location_id)
+        func.sum(models.AdvertsStats.advert_count)
+        / func.count(models.AdvertsStats.location_id)
     ).\
         filter(models.AdvertsStats.phrase == advert.phrase).\
         filter(models.AdvertsStats.location_id == advert.location_id).\
@@ -58,4 +59,3 @@ def get_advert_stat(db: Session, id: int, interval: str):
     return {message_max_count: max_count,
             message_min_count: min_count,
             message_average_count: average_count}
-
