@@ -43,12 +43,11 @@ def get(phrase: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="No such advert")
 
 
-def get_info_every_hour(advert: schemas.Advert, db: Session = Depends(get_db)):
-    i = 1
-    while i < 5:
+def get_info_every_hour(advert: schemas.Advert):
+    while True:
         advert_stats = get_data_from_avito.get_data_stat(advert)
-        print(advert_stats)
-        crud.write_stats(db, advert_stats)
-        print('database problem')
-        time.sleep(1)
-        i += 1
+        db = SessionLocal()
+        crud.write_stats(db=db, advert_stats=advert_stats)
+        db.close()
+        time.sleep(3600)
+

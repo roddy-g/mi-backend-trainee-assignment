@@ -6,8 +6,8 @@ class Adverts(Base):
     __tablename__ = "adverts"
 
     id = Column(Integer, primary_key=True, index=True)
-    phrase = Column(String, unique=True)
-    location_id = Column(String)
+    phrase = Column(String)
+    location_id = Column(Integer)
 
 
 class AdvertsStats(Base):
@@ -15,6 +15,6 @@ class AdvertsStats(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     phrase = Column(String)
-    location_id = Column(String)
+    location_id = Column(Integer)
     advert_count = Column(Integer)
     timestamp = Column(DateTime)
