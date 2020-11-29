@@ -21,7 +21,7 @@ def register_advert(db: Session, advert: schemas.Advert):
         filter(models.Adverts.phrase == advert.phrase).first().id
 
 
-def write_stats(db: Session, advert_stats: schemas.AdvertStats):
+def update_stats(db: Session, advert_stats: schemas.AdvertStats):
     db_record = models.AdvertsStats(phrase=advert_stats.phrase,
                                     location_id=advert_stats.location_id,
                                     advert_count=advert_stats.advert_count,

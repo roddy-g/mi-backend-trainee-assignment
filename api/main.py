@@ -37,7 +37,8 @@ def stat(advert_id: int, interval: int, db: Session = Depends(get_db)):
 def get_info_every_hour(advert: schemas.Advert):
     while True:
         advert_stats = get_data_from_avito.get_data_stat(advert)
-        db = SessionLocal()
-        crud.write_stats(db=db, advert_stats=advert_stats)
-        db.close()
+        if advert_stats:
+            db = SessionLocal()
+            crud.update_stats(db=db, advert_stats=advert_stats)
+            db.close()
         time.sleep(3600)
