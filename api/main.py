@@ -1,21 +1,12 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException, BackgroundTasks
 from api import models, schemas, crud, get_data_from_avito
-from api.db import engine, SessionLocal
+from api.db import engine, SessionLocal, get_db
 import time
 
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-
-
-def get_db():
-    db = None
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
 
 
 @app.post("/add")
@@ -34,11 +25,11 @@ def register(
     return {"message": message}
 
 
-@app.get("/get")
-def get(phrase: str, db: Session = Depends(get_db)):
-    db_record = crud.get_advert_by_phrase(db, phrase=phrase)
-    if db_record:
-        return db_record
+@app.get("/stat")
+def stat(advert_id: int, interval: int, db: Session = Depends(get_db)):
+    advert_stat = crud.get_advert_stat(db, advert_id, interval)
+    if advert_stat:
+        return advert_stat
     else:
         raise HTTPException(status_code=400, detail="No such advert")
 
@@ -50,4 +41,3 @@ def get_info_every_hour(advert: schemas.Advert):
         crud.write_stats(db=db, advert_stats=advert_stats)
         db.close()
         time.sleep(3600)
-
