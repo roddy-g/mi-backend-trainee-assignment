@@ -36,7 +36,8 @@ def get_date_some_days_ago(days: int):
 
 
 def get_advert_by_id(db: Session, advert_id: int):
-    return db.query(models.Adverts).filter(models.Adverts.id == advert_id).first()
+    return db.query(models.Adverts).\
+        filter(models.Adverts.id == advert_id).first()
 
 
 def get_advert_stat(db: Session, advert_get_stat: schemas.AdvertStatRequest):

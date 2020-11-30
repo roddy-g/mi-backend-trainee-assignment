@@ -26,7 +26,9 @@ def register(
 
 
 @app.post("/stat")
-def stat(advert_get_stat: schemas.AdvertStatRequest, db: Session = Depends(get_db)):
+def stat(advert_get_stat: schemas.AdvertStatRequest,
+         db: Session = Depends(get_db)
+         ):
     advert_stat = crud.get_advert_stat(db, advert_get_stat)
     if advert_stat:
         return advert_stat
