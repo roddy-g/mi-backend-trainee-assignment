@@ -39,7 +39,7 @@ def get_advert_by_id(db: Session, advert_id: int):
     return db.query(models.Adverts).filter(models.Adverts.id == advert_id).first()
 
 
-def get_advert_stat(db: Session, advert_get_stat: schemas.AdvertGetStat):
+def get_advert_stat(db: Session, advert_get_stat: schemas.AdvertStatRequest):
     date_from = get_date_some_days_ago(advert_get_stat.interval)
     advert = get_advert_by_id(db, advert_get_stat.advert_id)
     if not advert:

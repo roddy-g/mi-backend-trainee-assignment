@@ -18,7 +18,7 @@ class AdvertStats(Advert):
         orm_mode = True
 
 
-class AdvertGetStat(BaseModel):
+class AdvertStatRequest(BaseModel):
     advert_id: int
     interval: int
 

@@ -45,14 +45,14 @@ def test_path_add():
 
 
 def test_path_stat():
-    advert_get_stat = schemas.AdvertGetStat(advert_id=2, interval=1000)
+    advert_get_stat = schemas.AdvertStatRequest(advert_id=2, interval=1000)
     response = client.post(
         "/stat",
         json={'advert_id': advert_get_stat.advert_id, 'interval': advert_get_stat.interval}
     )
     assert response.status_code == 200
     assert response.json() == responses_data.response_id2_interval1000_data
-    advert_get_stat = schemas.AdvertGetStat(advert_id=0, interval=1000)
+    advert_get_stat = schemas.AdvertStatRequest(advert_id=0, interval=1000)
     response = client.post(
         "/stat",
         json={'advert_id': advert_get_stat.advert_id, 'interval': advert_get_stat.interval}
