@@ -16,3 +16,11 @@ class AdvertStats(Advert):
 
     class Config:
         orm_mode = True
+
+
+class AdvertGetStat(BaseModel):
+    advert_id: int
+    interval: int
+
+    class Config:
+        orm_mode = True

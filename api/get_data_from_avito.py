@@ -20,5 +20,3 @@ def get_data_stat(advertise: schemas.Advert):
         return advert_stats
     except KeyError:
         return None
-
-

@@ -25,16 +25,16 @@ def register(
     return {"message": message}
 
 
-@app.get("/stat")
-def stat(advert_id: int, interval: int, db: Session = Depends(get_db)):
-    advert_stat = crud.get_advert_stat(db, advert_id, interval)
+@app.post("/stat")
+def stat(advert_get_stat: schemas.AdvertGetStat, db: Session = Depends(get_db)):
+    advert_stat = crud.get_advert_stat(db, advert_get_stat)
     if advert_stat:
         return advert_stat
     else:
         raise HTTPException(status_code=400, detail="No such advert")
 
 
-def get_info_every_hour(advert: schemas.Advert):
+async def get_info_every_hour(advert: schemas.Advert):
     while True:
         advert_stats = get_data_from_avito.get_data_stat(advert)
         if advert_stats:

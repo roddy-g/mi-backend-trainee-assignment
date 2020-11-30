@@ -35,14 +35,20 @@ def get_date_some_days_ago(days: int):
     return datetime.today() - timedelta(days=days)
 
 
-def get_advert_stat(db: Session, id: int, interval: str):
-    date_from = get_date_some_days_ago(interval)
-    advert = db.query(models.Adverts).filter(models.Adverts.id == id).first()
+def get_advert_by_id(db: Session, advert_id: int):
+    return db.query(models.Adverts).filter(models.Adverts.id == advert_id).first()
+
+
+def get_advert_stat(db: Session, advert_get_stat: schemas.AdvertGetStat):
+    date_from = get_date_some_days_ago(advert_get_stat.interval)
+    advert = get_advert_by_id(db, advert_get_stat.advert_id)
+    if not advert:
+        return None
     max_count = db.query(func.max(models.AdvertsStats.advert_count)).\
         filter(models.AdvertsStats.phrase == advert.phrase).\
         filter(models.AdvertsStats.location_id == advert.location_id).\
         filter(models.AdvertsStats.timestamp > date_from).scalar()
-    min_count = db.query(func.max(models.AdvertsStats.advert_count)). \
+    min_count = db.query(func.min(models.AdvertsStats.advert_count)). \
         filter(models.AdvertsStats.phrase == advert.phrase). \
         filter(models.AdvertsStats.location_id == advert.location_id). \
         filter(models.AdvertsStats.timestamp > date_from).scalar()
