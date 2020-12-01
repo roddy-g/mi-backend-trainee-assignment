@@ -1,5 +1,5 @@
 test-coverage:
-	poetry run coverage report
+	poetry run coverage xml
 lint:
 	poetry run flake8 api
 test:
