@@ -59,3 +59,4 @@ def test_path_stat():
     )
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
+

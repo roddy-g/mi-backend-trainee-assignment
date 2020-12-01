@@ -1,5 +1,5 @@
 test-coverage:
-	poetry run pytest --cov-report xml tests/
+	poetry run coverage report
 lint:
 	poetry run flake8 api
 test:
