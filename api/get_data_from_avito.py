@@ -1,6 +1,7 @@
 from api import schemas
 import requests
 from datetime import datetime
+from tests.fixtures.headers import headers
 
 
 def get_data_stat(advertise: schemas.Advert):
@@ -8,7 +9,7 @@ def get_data_stat(advertise: schemas.Advert):
           'items?key=af0deccbgcgidddjgnvljitntccdduijhdinfgjgfjir&' \
           'query={}&locationId={}'\
         .format(advertise.phrase, advertise.location_id)
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
     if response.status_code != 200:
         return 'status code {}'.format(response.status_code)
     data = response.json()
