@@ -16,9 +16,7 @@ def register_advert(db: Session, advert: schemas.Advert):
     )
     db.add(db_record)
     db.commit()
-    db.refresh(db_record)
-    return db.query(models.Adverts).\
-        filter(models.Adverts.phrase == advert.phrase).first().id
+    return db_record.id
 
 
 def update_stats(db: Session, advert_stats: schemas.AdvertStats):
@@ -28,7 +26,6 @@ def update_stats(db: Session, advert_stats: schemas.AdvertStats):
                                     timestamp=advert_stats.timestamp)
     db.add(db_record)
     db.commit()
-    db.refresh(db_record)
 
 
 def get_date_some_days_ago(days: int):
