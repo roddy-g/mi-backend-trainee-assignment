@@ -9,6 +9,8 @@ def get_data_stat(advertise: schemas.Advert):
           'query={}&locationId={}'\
         .format(advertise.phrase, advertise.location_id)
     response = requests.get(url)
+    if response.status_code != 200:
+        return 'Not 200 status code'
     data = response.json()
     try:
         advert_count = data['result']['totalCount']
