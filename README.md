@@ -2,7 +2,12 @@
 # mi-backend-trainee-assignment
 Реализован JSON API cервис для сбора информации по количеству обьявлений по определенному запросу.
 
-Запуск: uvicorn api.main:app
+Запуск:
+
+   docker pull roddyg/avito:test-assignment 
+  
+   docker docker run -p 80:80 roddyg/avito:test-assignment 
+
 
 /add POST
 
