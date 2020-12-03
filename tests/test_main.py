@@ -4,9 +4,9 @@ from sqlalchemy.orm import sessionmaker
 from api.db import Base, get_db
 from api.main import app
 from api import crud
-from tests.fixtures.adverts import test_advert
-from tests.fixtures.adverts_stats import stats
-from tests.fixtures.advert_stat_requests import test_advert_stat_request
+from tests.fixtures.items import test_advert
+from tests.fixtures.items_stats import stats
+from tests.fixtures.item_stat_requests import test_item_stat_request
 from tests.fixtures.responses_data import *
 
 
@@ -61,8 +61,8 @@ def test_path_add():
 def test_path_stat():
     response = client.post(
         "/stat",
-        json={'advert_id': test_advert_stat_request.advert_id,
-              'interval': test_advert_stat_request.interval}
+        json={'advert_id': test_item_stat_request.advert_id,
+              'interval': test_item_stat_request.interval}
     )
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
@@ -73,8 +73,8 @@ def test_path_stat():
     db.close()
     response = client.post(
         "/stat",
-        json={'advert_id': test_advert_stat_request.advert_id,
-              'interval': test_advert_stat_request.interval}
+        json={'advert_id': test_item_stat_request.advert_id,
+              'interval': test_item_stat_request.interval}
     )
     assert response.status_code == 200
     print(response.json())
@@ -84,7 +84,7 @@ def test_path_stat():
     db.close()
     response = client.post(
         "/stat",
-        json={'advert_id': test_advert_stat_request.advert_id,
+        json={'advert_id': test_item_stat_request.advert_id,
               'interval': 'string'}
     )
     assert response.status_code == 422

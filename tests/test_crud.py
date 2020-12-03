@@ -3,9 +3,9 @@ from sqlalchemy.orm import sessionmaker
 from api.db import Base
 from api import crud
 from api import schemas, models
-from tests.fixtures.adverts import test_advert
-from tests.fixtures.adverts_stats import stats
-from tests.fixtures.advert_stat_requests import test_advert_stat_request
+from tests.fixtures.items import test_advert
+from tests.fixtures.items_stats import stats
+from tests.fixtures.item_stat_requests import test_item_stat_request
 from tests.fixtures.responses_data import *
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tests/fixtures/test_db.db"
@@ -26,7 +26,7 @@ def test_get_advert_by_phrase():
     db.close()
 
 
-def test_add_advert():
+def test_add_item():
     db = TestingSessionLocal()
     advert_id = crud.add_advert(db, test_advert).id
     assert advert_id == crud.get_advert_by_phrase(db, test_advert.phrase).id
@@ -39,17 +39,17 @@ def test_add_stats():
     crud.add_advert(db, test_advert)
     for stat in stats:
         crud.add_stats(db, stat)
-    assert crud.get_advert_stat(db, test_advert_stat_request) == response_stat
+    assert crud.get_advert_stat(db, test_item_stat_request) == response_stat
     crud.clear_db(db)
     db.close()
 
 
-def test_get_advert_stat():
+def test_get_item_stat():
     db = TestingSessionLocal()
     crud.add_advert(db, test_advert)
     for stat in stats:
         crud.add_stats(db, stat)
-    assert crud.get_advert_stat(db, test_advert_stat_request) == response_stat
+    assert crud.get_advert_stat(db, test_item_stat_request) == response_stat
     crud.clear_db(db)
     db.close()
 

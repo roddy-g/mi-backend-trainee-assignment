@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class Advert(BaseModel):
+class Item(BaseModel):
     phrase: str
     location_id: int
 
@@ -10,7 +10,7 @@ class Advert(BaseModel):
         orm_mode = True
 
 
-class AdvertStats(Advert):
+class ItemStats(Item):
     advert_count: int
     timestamp: datetime
 
@@ -18,7 +18,7 @@ class AdvertStats(Advert):
         orm_mode = True
 
 
-class AdvertStatRequest(BaseModel):
+class ItemStatRequest(BaseModel):
     advert_id: int
     interval: int
 

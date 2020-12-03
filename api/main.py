@@ -12,7 +12,7 @@ app = FastAPI()
 
 @app.post("/add")
 async def register(
-        advert: schemas.Advert,
+        advert: schemas.Item,
         db: Session = Depends(get_db)
 ):
     db_record = crud.get_advert_by_phrase(db, phrase=advert.phrase)
@@ -25,7 +25,7 @@ async def register(
 
 
 @app.post("/stat")
-def stat(advert_get_stat: schemas.AdvertStatRequest,
+def stat(advert_get_stat: schemas.ItemStatRequest,
          db: Session = Depends(get_db)
          ):
     advert_stat = crud.get_advert_stat(db, advert_get_stat)
@@ -41,8 +41,8 @@ def get_stat() -> None:
     db = SessionLocal()
     records = db.query(models.Adverts).all()
     for record in records:
-        advert = schemas.Advert(phrase=record.phrase,
-                                location_id=record.location_id)
+        advert = schemas.Item(phrase=record.phrase,
+                              location_id=record.location_id)
         advert_data = get_data_from_avito.get_data_stat(advert)
         if advert_data:
             crud.add_stats(db, advert_data)

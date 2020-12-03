@@ -9,7 +9,7 @@ def get_advert_by_phrase(db: Session, phrase: str):
         .filter(models.Adverts.phrase == phrase).first()
 
 
-def add_advert(db: Session, advert: schemas.Advert):
+def add_advert(db: Session, advert: schemas.Item):
     db_record = models.Adverts(
         phrase=advert.phrase,
         location_id=advert.location_id
@@ -19,7 +19,7 @@ def add_advert(db: Session, advert: schemas.Advert):
     return db_record
 
 
-def add_stats(db: Session, advert_stats: schemas.AdvertStats):
+def add_stats(db: Session, advert_stats: schemas.ItemStats):
     db_record = models.AdvertsStats(phrase=advert_stats.phrase,
                                     location_id=advert_stats.location_id,
                                     advert_count=advert_stats.advert_count,
@@ -38,7 +38,7 @@ def get_advert_by_id(db: Session, advert_id: int):
         filter(models.Adverts.id == advert_id).first()
 
 
-def get_advert_stat(db: Session, advert_get_stat: schemas.AdvertStatRequest):
+def get_advert_stat(db: Session, advert_get_stat: schemas.ItemStatRequest):
     date_from = get_date_some_days_ago(advert_get_stat.interval)
     advert = get_advert_by_id(db, advert_get_stat.advert_id)
     if not advert:
