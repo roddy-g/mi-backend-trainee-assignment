@@ -5,7 +5,7 @@ from api.db import Base, get_db
 from api.main import app
 from api import crud
 from tests.fixtures.adverts import test_advert
-from tests.fixtures.adverts_stats import *
+from tests.fixtures.adverts_stats import stats
 from tests.fixtures.advert_stat_requests import test_advert_stat_request
 from tests.fixtures.responses_data import *
 
@@ -68,9 +68,8 @@ def test_path_stat():
     assert response.json() == {'detail': 'No such advert'}
     db = TestingSessionLocal()
     crud.add_advert(db, test_advert)
-    crud.add_stats(db, test_advert_stats_count_30)
-    crud.add_stats(db, test_advert_stats_count_70)
-    crud.add_stats(db, test_advert_stats_count_170)
+    for stat in stats:
+        crud.add_stats(db, stat)
     db.close()
     response = client.post(
         "/stat",

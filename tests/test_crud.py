@@ -4,7 +4,7 @@ from api.db import Base
 from api import crud
 from api import schemas, models
 from tests.fixtures.adverts import test_advert
-from tests.fixtures.adverts_stats import *
+from tests.fixtures.adverts_stats import stats
 from tests.fixtures.advert_stat_requests import test_advert_stat_request
 from tests.fixtures.responses_data import *
 
@@ -37,9 +37,8 @@ def test_add_advert():
 def test_add_stats():
     db = TestingSessionLocal()
     crud.add_advert(db, test_advert)
-    crud.add_stats(db, test_advert_stats_count_30)
-    crud.add_stats(db, test_advert_stats_count_70)
-    crud.add_stats(db, test_advert_stats_count_170)
+    for stat in stats:
+        crud.add_stats(db, stat)
     assert crud.get_advert_stat(db, test_advert_stat_request) == response_stat
     crud.clear_db(db)
     db.close()
@@ -48,9 +47,8 @@ def test_add_stats():
 def test_get_advert_stat():
     db = TestingSessionLocal()
     crud.add_advert(db, test_advert)
-    crud.add_stats(db, test_advert_stats_count_30)
-    crud.add_stats(db, test_advert_stats_count_70)
-    crud.add_stats(db, test_advert_stats_count_170)
+    for stat in stats:
+        crud.add_stats(db, stat)
     assert crud.get_advert_stat(db, test_advert_stat_request) == response_stat
     crud.clear_db(db)
     db.close()
