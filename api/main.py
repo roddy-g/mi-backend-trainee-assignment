@@ -21,7 +21,7 @@ async def register(
         raise HTTPException(status_code=400, detail=message)
     advert_id = crud.add_advert(db, advert).id
     message = "Advert successfully registered with id = '{}'".format(advert_id)
-    #background_tasks.add_task(get_info_every_hour, advert)
+    # comment out background_tasks.add_task(get_info_every_hour, advert)
     return {"message": message}
 
 
