@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException, BackgroundTasks
 from api import models, schemas, crud, get_data_from_avito
 from api.db import engine, SessionLocal, get_db
-import time
+
+from fastapi_utils.tasks import repeat_every
 
 
 models.Base.metadata.create_all(bind=engine)
@@ -12,7 +13,6 @@ app = FastAPI()
 @app.post("/add")
 async def register(
         advert: schemas.Advert,
-        background_tasks: BackgroundTasks,
         db: Session = Depends(get_db)
 ):
     db_record = crud.get_advert_by_phrase(db, phrase=advert.phrase)
@@ -21,7 +21,6 @@ async def register(
         raise HTTPException(status_code=400, detail=message)
     advert_id = crud.add_advert(db, advert).id
     message = "Advert successfully registered with id = '{}'".format(advert_id)
-    # comment out background_tasks.add_task(get_info_every_hour, advert)
     return {"message": message}
 
 
@@ -36,11 +35,19 @@ def stat(advert_get_stat: schemas.AdvertStatRequest,
         raise HTTPException(status_code=400, detail="No such advert")
 
 
-async def get_info_every_hour(advert: schemas.Advert):
-    while True:
-        advert_stats = get_data_from_avito.get_data_stat(advert)
-        if advert_stats:
-            db = SessionLocal()
-            crud.add_stats(db=db, advert_stats=advert_stats)
-            db.close()
-        time.sleep(3600)
+@app.on_event("startup")
+@repeat_every(seconds=60 * 60)  # 1 hour
+def get_stat() -> None:
+    db = SessionLocal()
+    records = db.query(models.Adverts).all()
+    for record in records:
+        advert = schemas.Advert(phrase=record.phrase,
+                                location_id=record.location_id)
+        advert_data = get_data_from_avito.get_data_stat(advert)
+        if advert_data:
+            crud.add_stats(db, advert_data)
+    db.close()
+
+
+
+
