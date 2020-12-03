@@ -5,7 +5,7 @@ from api.db import Base, get_db
 from api.main import app
 from api import crud
 from tests.fixtures.adverts import test_advert
-from tests.fixtures.adverts_stats import test_advert_stats
+from tests.fixtures.adverts_stats import *
 from tests.fixtures.advert_stat_requests import test_advert_stat_request
 from tests.fixtures.responses_data import *
 
@@ -54,7 +54,7 @@ def test_path_add():
     assert response.status_code == 400
     assert response.json()['detail'] == response_already_registered
     db = TestingSessionLocal()
-    crud.delete_advert_by_phrase(db, test_advert.phrase)
+    crud.clear_db(db)
     db.close()
 
 
@@ -68,9 +68,9 @@ def test_path_stat():
     assert response.json() == {'detail': 'No such advert'}
     db = TestingSessionLocal()
     crud.add_advert(db, test_advert)
-    crud.add_stats(db, test_advert_stats)
-    crud.add_stats(db, test_advert_stats)
-    crud.add_stats(db, test_advert_stats)
+    crud.add_stats(db, test_advert_stats_count_30)
+    crud.add_stats(db, test_advert_stats_count_70)
+    crud.add_stats(db, test_advert_stats_count_170)
     db.close()
     response = client.post(
         "/stat",
@@ -81,8 +81,7 @@ def test_path_stat():
     print(response.json())
     assert response.json() == response_stat
     db = TestingSessionLocal()
-    crud.delete_advert_by_phrase(db, test_advert.phrase)
-    crud.delete_advert_stat_by_phrase(db, test_advert_stats.phrase)
+    crud.clear_db(db)
     db.close()
     response = client.post(
         "/stat",
