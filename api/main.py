@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI, HTTPException, BackgroundTasks
+from fastapi import Depends, FastAPI, HTTPException
 from api import models, schemas, crud, get_data_from_avito
 from api.db import engine, SessionLocal, get_db
 
@@ -47,7 +47,3 @@ def get_stat() -> None:
         if advert_data:
             crud.add_stats(db, advert_data)
     db.close()
-
-
-
-
