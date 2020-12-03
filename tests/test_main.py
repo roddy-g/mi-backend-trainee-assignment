@@ -3,11 +3,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from api.db import Base, get_db
 from api.main import app
-from api import schemas, crud
-from tests.fixtures import responses_data
+from api import crud
 from tests.fixtures.adverts import test_advert
 from tests.fixtures.adverts_stats import test_advert_stats
 from tests.fixtures.advert_stat_requests import test_advert_stat_request
+from tests.fixtures.responses_data import *
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tests/fixtures/test_db.db"
@@ -45,14 +45,14 @@ def test_path_add():
               'location_id': test_advert.location_id}
     )
     assert response.status_code == 200
-    assert response.json()['message'] == "Advert successfully registered with id = '1'"
+    assert response.json()['message'] == response_success_registered
     response = client.post(
         "/add",
         json={'phrase': test_advert.phrase,
               'location_id': test_advert.location_id}
     )
     assert response.status_code == 400
-    assert response.json()['detail'] == "Advert already registered, id = '1'"
+    assert response.json()['detail'] == response_already_registered
     db = TestingSessionLocal()
     crud.delete_advert_by_phrase(db, test_advert.phrase)
     db.close()
@@ -78,7 +78,8 @@ def test_path_stat():
               'interval': test_advert_stat_request.interval}
     )
     assert response.status_code == 200
-    assert response.json()['Среднее количество объявлений за период'] == 100
+    print(response.json())
+    assert response.json() == response_stat
     db = TestingSessionLocal()
     crud.delete_advert_by_phrase(db, test_advert.phrase)
     crud.delete_advert_stat_by_phrase(db, test_advert_stats.phrase)
