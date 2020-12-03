@@ -9,23 +9,24 @@ def get_advert_by_phrase(db: Session, phrase: str):
         .filter(models.Adverts.phrase == phrase).first()
 
 
-def register_advert(db: Session, advert: schemas.Advert):
+def add_advert(db: Session, advert: schemas.Advert):
     db_record = models.Adverts(
         phrase=advert.phrase,
         location_id=advert.location_id
     )
     db.add(db_record)
     db.commit()
-    return db_record.id
+    return db_record
 
 
-def update_stats(db: Session, advert_stats: schemas.AdvertStats):
+def add_stats(db: Session, advert_stats: schemas.AdvertStats):
     db_record = models.AdvertsStats(phrase=advert_stats.phrase,
                                     location_id=advert_stats.location_id,
                                     advert_count=advert_stats.advert_count,
                                     timestamp=advert_stats.timestamp)
     db.add(db_record)
     db.commit()
+    return db_record
 
 
 def get_date_some_days_ago(days: int):
@@ -63,3 +64,18 @@ def get_advert_stat(db: Session, advert_get_stat: schemas.AdvertStatRequest):
     return {message_max_count: max_count,
             message_min_count: min_count,
             message_average_count: average_count}
+
+
+def delete_advert_by_phrase(db: Session, phrase: str):
+    record_to_delete = db.query(models.Adverts).\
+        filter(models.Adverts.phrase == phrase).first()
+    db.delete(record_to_delete)
+    db.commit()
+
+
+def delete_advert_stat_by_phrase(db: Session, phrase: str):
+    records_to_delete = db.query(models.AdvertsStats).\
+        filter(models.AdvertsStats.phrase == phrase).all()
+    for record in records_to_delete:
+        db.delete(record)
+    db.commit()

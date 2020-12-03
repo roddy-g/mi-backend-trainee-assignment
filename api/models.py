@@ -5,7 +5,7 @@ from api.db import Base
 class Adverts(Base):
     __tablename__ = "adverts"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     phrase = Column(String)
     location_id = Column(Integer)
 
@@ -13,7 +13,7 @@ class Adverts(Base):
 class AdvertsStats(Base):
     __tablename__ = "adverts stats"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     phrase = Column(String)
     location_id = Column(Integer)
     advert_count = Column(Integer)
