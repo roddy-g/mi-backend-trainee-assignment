@@ -6,6 +6,8 @@ from api.main import app
 from api import schemas, crud
 from tests.fixtures import responses_data
 from tests.fixtures.adverts import test_advert
+from tests.fixtures.adverts_stats import test_advert_stats
+from tests.fixtures.advert_stat_requests import test_advert_stat_request
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tests/fixtures/test_db.db"
@@ -56,22 +58,37 @@ def test_path_add():
     db.close()
 
 
-
-
-
-'''def test_path_stat():
-    advert_get_stat = schemas.AdvertStatRequest(advert_id=2, interval=1000)
+def test_path_stat():
     response = client.post(
         "/stat",
-        json={'advert_id': advert_get_stat.advert_id, 'interval': advert_get_stat.interval}
-    )
-    assert response.status_code == 200
-    assert response.json() == responses_data.response_id2_interval1000_data
-    advert_get_stat = schemas.AdvertStatRequest(advert_id=0, interval=1000)
-    response = client.post(
-        "/stat",
-        json={'advert_id': advert_get_stat.advert_id, 'interval': advert_get_stat.interval}
+        json={'advert_id': test_advert_stat_request.advert_id,
+              'interval': test_advert_stat_request.interval}
     )
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
-'''
+    db = TestingSessionLocal()
+    crud.add_advert(db, test_advert)
+    crud.add_stats(db, test_advert_stats)
+    crud.add_stats(db, test_advert_stats)
+    crud.add_stats(db, test_advert_stats)
+    db.close()
+    response = client.post(
+        "/stat",
+        json={'advert_id': test_advert_stat_request.advert_id,
+              'interval': test_advert_stat_request.interval}
+    )
+    assert response.status_code == 200
+    assert response.json()['Среднее количество объявлений за период'] == 100
+    db = TestingSessionLocal()
+    crud.delete_advert_by_phrase(db, test_advert.phrase)
+    crud.delete_advert_stat_by_phrase(db, test_advert_stats.phrase)
+    db.close()
+    response = client.post(
+        "/stat",
+        json={'advert_id': test_advert_stat_request.advert_id,
+              'interval': 'string'}
+    )
+    assert response.status_code == 422
+
+
+

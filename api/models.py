@@ -7,7 +7,6 @@ class Adverts(Base):
     __tablename__ = "adverts"
 
     UniqueConstraint('phrase', 'location_id')
-
     id = Column(Integer, primary_key=True)
     phrase = Column(String)
     location_id = Column(Integer)
