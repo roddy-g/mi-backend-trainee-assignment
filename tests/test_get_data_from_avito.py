@@ -1,5 +1,6 @@
 from api import get_data_from_avito, schemas
 
+
 def test_get_data_from_avito():
     moscow_location_id = 637640
     phrase = 'iphone'

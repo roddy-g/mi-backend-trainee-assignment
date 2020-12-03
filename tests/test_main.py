@@ -3,8 +3,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from api.db import Base, get_db
 from api.main import app
-from api import schemas
+from api import schemas, crud
 from tests.fixtures import responses_data
+from tests.fixtures.adverts import test_advert
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tests/fixtures/test_db.db"
@@ -32,19 +33,33 @@ client = TestClient(app)
 def test_path_add():
     response = client.post(
         "/add",
-        json={'phrase': 'test phrase', 'location_id': 'string_type location'}
+        json={'phrase': test_advert.phrase,
+              'location_id': 'string type of location'}
     )
     assert response.status_code == 422
-    advert = schemas.Advert(phrase='test phrase', location_id=637640)
     response = client.post(
         "/add",
-        json={'phrase': advert.phrase, 'location_id': advert.location_id}
+        json={'phrase': test_advert.phrase,
+              'location_id': test_advert.location_id}
+    )
+    assert response.status_code == 200
+    assert response.json()['message'] == "Advert successfully registered with id = '1'"
+    response = client.post(
+        "/add",
+        json={'phrase': test_advert.phrase,
+              'location_id': test_advert.location_id}
     )
     assert response.status_code == 400
-    assert response.json() == {'detail': "Advert already registered, id='2'"}
+    assert response.json()['detail'] == "Advert already registered, id = '1'"
+    db = TestingSessionLocal()
+    crud.delete_advert_by_phrase(db, test_advert.phrase)
+    db.close()
 
 
-def test_path_stat():
+
+
+
+'''def test_path_stat():
     advert_get_stat = schemas.AdvertStatRequest(advert_id=2, interval=1000)
     response = client.post(
         "/stat",
@@ -59,4 +74,4 @@ def test_path_stat():
     )
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
-
+'''

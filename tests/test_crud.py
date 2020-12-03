@@ -6,6 +6,7 @@ from api import schemas, models
 from tests.fixtures.adverts import test_advert
 from tests.fixtures.adverts_stats import test_advert_stats
 from tests.fixtures.advert_stat_requests import test_advert_stat_request
+
 SQLALCHEMY_DATABASE_URL = "sqlite:///./tests/fixtures/test_db.db"
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}

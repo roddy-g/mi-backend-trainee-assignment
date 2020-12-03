@@ -10,18 +10,18 @@ app = FastAPI()
 
 
 @app.post("/add")
-def register(
+async def register(
         advert: schemas.Advert,
         background_tasks: BackgroundTasks,
         db: Session = Depends(get_db)
 ):
     db_record = crud.get_advert_by_phrase(db, phrase=advert.phrase)
     if db_record:
-        message = "Advert already registered, id='{}'".format(db_record.id)
+        message = "Advert already registered, id = '{}'".format(db_record.id)
         raise HTTPException(status_code=400, detail=message)
-    advert_id = crud.add_advert(db, advert)
+    advert_id = crud.add_advert(db, advert).id
     message = "Advert successfully registered with id = '{}'".format(advert_id)
-    background_tasks.add_task(get_info_every_hour, advert)
+    #background_tasks.add_task(get_info_every_hour, advert)
     return {"message": message}
 
 
