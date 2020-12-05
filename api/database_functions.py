@@ -33,19 +33,11 @@ def add_stats(db: Session, item_stats: schemas.ItemStats):
 def get_item_stat(db: Session, item_get_stat: schemas.ItemStatRequest):
     date_from = get_date_some_days_ago(item_get_stat.interval)
     result = db.query(
-        func.max(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.item_id == item_get_stat.item_id,
-               models.ItemsStats.timestamp > date_from),
-        func.min(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.item_id == item_get_stat.item_id,
-               models.ItemsStats.timestamp > date_from),
-        func.sum(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.item_id == item_get_stat.item_id,
-               models.ItemsStats.timestamp > date_from)
-        / func.count(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.item_id == item_get_stat.item_id,
-               models.ItemsStats.timestamp > date_from)
-    )
+        func.max(models.ItemsStats.advert_count),
+        func.min(models.ItemsStats.advert_count),
+        func.avg(models.ItemsStats.advert_count)
+    ).filter(models.ItemsStats.item_id == item_get_stat.item_id,
+             models.ItemsStats.timestamp > date_from)
     message_max_count = 'Максимальное количество объявлений за период'
     message_min_count = 'Минимальное количество объявлений за период'
     message_average_count = 'Среднее количество объявлений за период'
