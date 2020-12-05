@@ -70,9 +70,6 @@ def get_item_by_id(db: Session, advert_id: int):
         filter(models.Items.id == advert_id).first()
 
 
-
-
-
 def clear_db(db: Session):
     records_to_delete = db.query(models.ItemsStats).all()
     for record in records_to_delete:

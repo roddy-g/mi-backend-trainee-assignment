@@ -33,6 +33,9 @@ client = TestClient(app)
 
 
 def test_path_add():
+    db = TestingSessionLocal()
+    database_functions.clear_db(db)
+    db.close()
     response = client.post(
         "/add",
         json={'phrase': test_item.phrase,
@@ -59,6 +62,9 @@ def test_path_add():
 
 
 def test_path_stat():
+    db = TestingSessionLocal()
+    database_functions.clear_db(db)
+    db.close()
     response = client.post(
         "/stat",
         json={'advert_id': test_item_stat_request.advert_id,
