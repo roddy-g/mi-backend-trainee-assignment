@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from api.db import Base, get_db
 from api.main import app
-from api import crud
+from api import database_functions
 from tests.fixtures.items import test_item
 from tests.fixtures.items_stats import item_stats
 from tests.fixtures.item_stat_requests import test_item_stat_request
@@ -54,7 +54,7 @@ def test_path_add():
     assert response.status_code == 400
     assert response.json()['detail'] == response_already_registered
     db = TestingSessionLocal()
-    crud.clear_db(db)
+    database_functions.clear_db(db)
     db.close()
 
 
@@ -67,9 +67,9 @@ def test_path_stat():
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
     db = TestingSessionLocal()
-    crud.add_item(db, test_item)
+    database_functions.add_item(db, test_item)
     for stat in item_stats:
-        crud.add_stats(db, stat)
+        database_functions.add_stats(db, stat)
     db.close()
     response = client.post(
         "/stat",
@@ -80,7 +80,7 @@ def test_path_stat():
     print(response.json())
     assert response.json() == response_stat
     db = TestingSessionLocal()
-    crud.clear_db(db)
+    database_functions.clear_db(db)
     db.close()
     response = client.post(
         "/stat",

@@ -30,15 +30,6 @@ def add_stats(db: Session, item_stats: schemas.ItemStats):
     return db_record
 
 
-def get_date_some_days_ago(days: int):
-    return datetime.today() - timedelta(days=days)
-
-
-def get_item_by_id(db: Session, advert_id: int):
-    return db.query(models.Items).\
-        filter(models.Items.id == advert_id).first()
-
-
 def get_item_stat(db: Session, advert_get_stat: schemas.ItemStatRequest):
     date_from = get_date_some_days_ago(advert_get_stat.interval)
     advert = get_item_by_id(db, advert_get_stat.advert_id)
@@ -68,6 +59,18 @@ def get_item_stat(db: Session, advert_get_stat: schemas.ItemStatRequest):
     return {message_max_count: result[0][0],
             message_min_count: result[0][1],
             message_average_count: result[0][2]}
+
+
+def get_date_some_days_ago(days: int):
+    return datetime.today() - timedelta(days=days)
+
+
+def get_item_by_id(db: Session, advert_id: int):
+    return db.query(models.Items).\
+        filter(models.Items.id == advert_id).first()
+
+
+
 
 
 def clear_db(db: Session):

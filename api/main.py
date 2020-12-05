@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
-from api import models, schemas, crud, get_data_from_avito
+from api import models, schemas, database_functions, get_data_from_avito
 from api.db import engine, SessionLocal, get_db
 
 from fastapi_utils.tasks import repeat_every
@@ -15,11 +15,11 @@ async def register(
         item: schemas.Item,
         db: Session = Depends(get_db)
 ):
-    db_record = crud.get_item(db, item)
+    db_record = database_functions.get_item(db, item)
     if db_record:
         message = "Advert already registered, id = '{}'".format(db_record.id)
         raise HTTPException(status_code=400, detail=message)
-    item_id = crud.add_item(db, item).id
+    item_id = database_functions.add_item(db, item).id
     message = "Advert successfully registered with id = '{}'".format(item_id)
     return {"message": message}
 
@@ -28,7 +28,7 @@ async def register(
 def stat(item_stat_request: schemas.ItemStatRequest,
          db: Session = Depends(get_db)
          ):
-    item_stat = crud.get_item_stat(db, item_stat_request)
+    item_stat = database_functions.get_item_stat(db, item_stat_request)
     if item_stat:
         return item_stat
     else:
@@ -45,5 +45,5 @@ def get_stat() -> None:
                             location_id=record.location_id)
         item_data = get_data_from_avito.get_data_stat(item)
         if item_data:
-            crud.add_stats(db, item_data)
+            database_functions.add_stats(db, item_data)
     db.close()

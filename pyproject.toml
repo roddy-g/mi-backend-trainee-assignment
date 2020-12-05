@@ -6,6 +6,7 @@ authors = ["Roddy <per677199@yandex.ru>"]
 
 packages = [
   { include = "api" },
+  { include = "tests" },
 ]
 
 [tool.poetry.dependencies]
