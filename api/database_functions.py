@@ -3,6 +3,7 @@ from api import models, schemas
 from datetime import datetime, timedelta
 from sqlalchemy import func
 
+
 def get_item(db: Session, item: schemas.Item):
     return db.query(models.Items)\
         .filter(models.Items.phrase == item.phrase,
