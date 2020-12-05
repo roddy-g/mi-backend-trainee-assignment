@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
-from api import models, schemas, database_functions, get_data_from_avito
+from api import models, schemas, database_functions
 from api.db import engine, SessionLocal, get_db
 from datetime import datetime
 import requests
@@ -42,10 +42,13 @@ def get_stat() -> None:
     db = SessionLocal()
     records = db.query(models.Items).all()
     for record in records:
-        url = 'https://m.avito.ru/api/9/items?key=af0deccbgcgidddjgnvljitntccdduijhdinfgjgfjir&query={}&' \
+        url = 'https://m.avito.ru/api/9/items?' \
+              'key=af0deccbgcgidddjgnvljitntccdduijhdinfgjgfjir&query={}&' \
               'locationId={}&context=H4sIAAAAAAAA_wFCAL3_YToxOntzOjU6Inhf' \
-              'c2d0IjtzOjQwOiJhZWQxY2ZlNzQ4OTE5MDdkM2E3N2JlYjUyNWZlZDI0NmEyN2MwNzNlIjt9e-eh1UIAAAA&' \
-              'page=1&display=list&limit=30'.format(record.phrase, record.location_id)
+              'c2d0IjtzOjQwOiJhZWQxY2ZlNzQ4OTE5MDdkM2E3N2JlYjUyNWZlZDI0NmEyN' \
+              '2MwNzNlIjt9e-eh1UIAAAA&' \
+              'page=1&display=list&limit=30'.format(record.phrase,
+                                                    record.location_id)
         response = requests.get(url)
         data = response.json()
         try:
@@ -53,6 +56,7 @@ def get_stat() -> None:
             timestamp = datetime.now()
         except KeyError:
             return 'No valid data'
+        print(advert_count)
         item_stat = schemas.ItemStats(item_id=record.id,
                                       items_quantity=advert_count,
                                       timestamp=timestamp)

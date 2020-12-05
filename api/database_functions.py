@@ -21,9 +21,10 @@ def add_item(db: Session, item: schemas.Item):
 
 
 def add_stats(db: Session, item_stats: schemas.ItemStats):
-    item_stats_to_add = models.ItemsStats(item_id=item_stats.item_id,
-                                          advert_count=item_stats.items_quantity,
-                                          timestamp=item_stats.timestamp)
+    item_stats_to_add = models.\
+        ItemsStats(item_id=item_stats.item_id,
+                   advert_count=item_stats.items_quantity,
+                   timestamp=item_stats.timestamp)
     db.add(item_stats_to_add)
     db.commit()
     return item_stats_to_add
