@@ -3,8 +3,8 @@ from sqlalchemy.orm import sessionmaker
 from api.db import Base
 from api import crud
 from api import schemas, models
-from tests.fixtures.items import test_advert
-from tests.fixtures.items_stats import stats
+from tests.fixtures.items import test_item
+from tests.fixtures.items_stats import item_stats
 from tests.fixtures.item_stat_requests import test_item_stat_request
 from tests.fixtures.responses_data import *
 
@@ -17,39 +17,39 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 Base.metadata.create_all(bind=engine)
 
 
-def test_get_advert_by_phrase():
+def test_get_item():
     db = TestingSessionLocal()
-    crud.add_advert(db, test_advert)
-    location_id = crud.get_advert_by_phrase(db, test_advert.phrase).location_id
-    assert location_id == test_advert.location_id
+    crud.add_item(db, test_item)
+    location_id = crud.get_item(db, test_item).location_id
+    assert location_id == test_item.location_id
     crud.clear_db(db)
     db.close()
 
 
 def test_add_item():
     db = TestingSessionLocal()
-    advert_id = crud.add_advert(db, test_advert).id
-    assert advert_id == crud.get_advert_by_phrase(db, test_advert.phrase).id
+    advert_id = crud.add_item(db, test_item).id
+    assert advert_id == crud.get_item(db, test_item).id
     crud.clear_db(db)
     db.close()
 
 
 def test_add_stats():
     db = TestingSessionLocal()
-    crud.add_advert(db, test_advert)
-    for stat in stats:
+    crud.add_item(db, test_item)
+    for stat in item_stats:
         crud.add_stats(db, stat)
-    assert crud.get_advert_stat(db, test_item_stat_request) == response_stat
+    assert crud.get_item_stat(db, test_item_stat_request) == response_stat
     crud.clear_db(db)
     db.close()
 
 
 def test_get_item_stat():
     db = TestingSessionLocal()
-    crud.add_advert(db, test_advert)
-    for stat in stats:
+    crud.add_item(db, test_item)
+    for stat in item_stats:
         crud.add_stats(db, stat)
-    assert crud.get_advert_stat(db, test_item_stat_request) == response_stat
+    assert crud.get_item_stat(db, test_item_stat_request) == response_stat
     crud.clear_db(db)
     db.close()
 

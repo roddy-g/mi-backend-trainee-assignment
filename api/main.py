@@ -12,25 +12,25 @@ app = FastAPI()
 
 @app.post("/add")
 async def register(
-        advert: schemas.Item,
+        item: schemas.Item,
         db: Session = Depends(get_db)
 ):
-    db_record = crud.get_advert_by_phrase(db, phrase=advert.phrase)
+    db_record = crud.get_item(db, item)
     if db_record:
         message = "Advert already registered, id = '{}'".format(db_record.id)
         raise HTTPException(status_code=400, detail=message)
-    advert_id = crud.add_advert(db, advert).id
-    message = "Advert successfully registered with id = '{}'".format(advert_id)
+    item_id = crud.add_item(db, item).id
+    message = "Advert successfully registered with id = '{}'".format(item_id)
     return {"message": message}
 
 
 @app.post("/stat")
-def stat(advert_get_stat: schemas.ItemStatRequest,
+def stat(item_stat_request: schemas.ItemStatRequest,
          db: Session = Depends(get_db)
          ):
-    advert_stat = crud.get_advert_stat(db, advert_get_stat)
-    if advert_stat:
-        return advert_stat
+    item_stat = crud.get_item_stat(db, item_stat_request)
+    if item_stat:
+        return item_stat
     else:
         raise HTTPException(status_code=400, detail="No such advert")
 
@@ -39,11 +39,11 @@ def stat(advert_get_stat: schemas.ItemStatRequest,
 @repeat_every(seconds=60 * 60)  # 1 hour
 def get_stat() -> None:
     db = SessionLocal()
-    records = db.query(models.Adverts).all()
+    records = db.query(models.Items).all()
     for record in records:
-        advert = schemas.Item(phrase=record.phrase,
-                              location_id=record.location_id)
-        advert_data = get_data_from_avito.get_data_stat(advert)
-        if advert_data:
-            crud.add_stats(db, advert_data)
+        item = schemas.Item(phrase=record.phrase,
+                            location_id=record.location_id)
+        item_data = get_data_from_avito.get_data_stat(item)
+        if item_data:
+            crud.add_stats(db, item_data)
     db.close()

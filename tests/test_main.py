@@ -4,8 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from api.db import Base, get_db
 from api.main import app
 from api import crud
-from tests.fixtures.items import test_advert
-from tests.fixtures.items_stats import stats
+from tests.fixtures.items import test_item
+from tests.fixtures.items_stats import item_stats
 from tests.fixtures.item_stat_requests import test_item_stat_request
 from tests.fixtures.responses_data import *
 
@@ -35,21 +35,21 @@ client = TestClient(app)
 def test_path_add():
     response = client.post(
         "/add",
-        json={'phrase': test_advert.phrase,
+        json={'phrase': test_item.phrase,
               'location_id': 'string type of location'}
     )
     assert response.status_code == 422
     response = client.post(
         "/add",
-        json={'phrase': test_advert.phrase,
-              'location_id': test_advert.location_id}
+        json={'phrase': test_item.phrase,
+              'location_id': test_item.location_id}
     )
     assert response.status_code == 200
     assert response.json()['message'] == response_success_registered
     response = client.post(
         "/add",
-        json={'phrase': test_advert.phrase,
-              'location_id': test_advert.location_id}
+        json={'phrase': test_item.phrase,
+              'location_id': test_item.location_id}
     )
     assert response.status_code == 400
     assert response.json()['detail'] == response_already_registered
@@ -67,8 +67,8 @@ def test_path_stat():
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
     db = TestingSessionLocal()
-    crud.add_advert(db, test_advert)
-    for stat in stats:
+    crud.add_item(db, test_item)
+    for stat in item_stats:
         crud.add_stats(db, stat)
     db.close()
     response = client.post(

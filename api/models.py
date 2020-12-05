@@ -3,8 +3,8 @@ from api.db import Base
 from sqlalchemy.schema import UniqueConstraint
 
 
-class Adverts(Base):
-    __tablename__ = "adverts"
+class Items(Base):
+    __tablename__ = "items"
 
     UniqueConstraint('phrase', 'location_id')
     id = Column(Integer, primary_key=True)
@@ -12,8 +12,8 @@ class Adverts(Base):
     location_id = Column(Integer)
 
 
-class AdvertsStats(Base):
-    __tablename__ = "adverts stats"
+class ItemsStats(Base):
+    __tablename__ = "items_stats"
 
     id = Column(Integer, primary_key=True)
     phrase = Column(String)
