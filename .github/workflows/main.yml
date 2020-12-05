@@ -30,4 +30,4 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: 4683f8a33bc999ce389a1890b39171e6e6283dd49f87b2949191c4f518399216
         with:
-          coverageCommand: make test
+          coverageCommand: make test-coverage
