@@ -10,8 +10,9 @@ class Item(BaseModel):
         orm_mode = True
 
 
-class ItemStats(Item):
-    advert_count: int
+class ItemStats(BaseModel):
+    item_id: int
+    items_quantity: int
     timestamp: datetime
 
     class Config:
@@ -19,7 +20,7 @@ class ItemStats(Item):
 
 
 class ItemStatRequest(BaseModel):
-    advert_id: int
+    item_id: int
     interval: int
 
     class Config:

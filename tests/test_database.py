@@ -48,7 +48,7 @@ def test_add_stats():
 def test_get_item_stat():
     db = TestingSessionLocal()
     database_functions.clear_db(db)
-    #assert database_functions.get_item_stat(db, test_item_stat_request) is None
+    assert database_functions.get_item_stat(db, test_item_stat_request) is None
     database_functions.add_item(db, test_item)
     for stat in item_stats:
         database_functions.add_stats(db, stat)

@@ -67,7 +67,7 @@ def test_path_stat():
     db.close()
     response = client.post(
         "/stat",
-        json={'advert_id': test_item_stat_request.advert_id,
+        json={'item_id': test_item_stat_request.item_id,
               'interval': test_item_stat_request.interval}
     )
     assert response.status_code == 400
@@ -79,7 +79,7 @@ def test_path_stat():
     db.close()
     response = client.post(
         "/stat",
-        json={'advert_id': test_item_stat_request.advert_id,
+        json={'item_id': test_item_stat_request.item_id,
               'interval': test_item_stat_request.interval}
     )
     assert response.status_code == 200
@@ -90,7 +90,7 @@ def test_path_stat():
     db.close()
     response = client.post(
         "/stat",
-        json={'advert_id': test_item_stat_request.advert_id,
+        json={'item_id': test_item_stat_request.item_id,
               'interval': 'string'}
     )
     assert response.status_code == 422

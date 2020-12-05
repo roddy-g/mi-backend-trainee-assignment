@@ -21,53 +21,46 @@ def add_item(db: Session, item: schemas.Item):
 
 
 def add_stats(db: Session, item_stats: schemas.ItemStats):
-    db_record = models.ItemsStats(phrase=item_stats.phrase,
-                                  location_id=item_stats.location_id,
-                                  advert_count=item_stats.advert_count,
-                                  timestamp=item_stats.timestamp)
-    db.add(db_record)
+    item_stats_to_add = models.ItemsStats(item_id=item_stats.item_id,
+                                          advert_count=item_stats.items_quantity,
+                                          timestamp=item_stats.timestamp)
+    db.add(item_stats_to_add)
     db.commit()
-    return db_record
+    return item_stats_to_add
 
 
-def get_item_stat(db: Session, advert_get_stat: schemas.ItemStatRequest):
-    date_from = get_date_some_days_ago(advert_get_stat.interval)
-    advert = get_item_by_id(db, advert_get_stat.advert_id)
-    if not advert:
-        return None
+def get_item_stat(db: Session, item_get_stat: schemas.ItemStatRequest):
+    date_from = get_date_some_days_ago(item_get_stat.interval)
     result = db.query(
         func.max(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.phrase == advert.phrase,
-               models.ItemsStats.location_id == advert.location_id,
+        filter(models.ItemsStats.item_id == item_get_stat.item_id,
                models.ItemsStats.timestamp > date_from),
         func.min(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.phrase == advert.phrase,
-               models.ItemsStats.location_id == advert.location_id,
+        filter(models.ItemsStats.item_id == item_get_stat.item_id,
                models.ItemsStats.timestamp > date_from),
         func.sum(models.ItemsStats.advert_count).
-        filter(models.ItemsStats.phrase == advert.phrase,
-               models.ItemsStats.location_id == advert.location_id,
+        filter(models.ItemsStats.item_id == item_get_stat.item_id,
                models.ItemsStats.timestamp > date_from)
-        / func.count(models.ItemsStats.location_id).
-        filter(models.ItemsStats.phrase == advert.phrase,
-               models.ItemsStats.location_id == advert.location_id,
+        / func.count(models.ItemsStats.advert_count).
+        filter(models.ItemsStats.item_id == item_get_stat.item_id,
                models.ItemsStats.timestamp > date_from)
     )
     message_max_count = 'Максимальное количество объявлений за период'
     message_min_count = 'Минимальное количество объявлений за период'
     message_average_count = 'Среднее количество объявлений за период'
-    return {message_max_count: result[0][0],
-            message_min_count: result[0][1],
-            message_average_count: result[0][2]}
+    if result[0][0] is not None:
+        return {message_max_count: result[0][0],
+                message_min_count: result[0][1],
+                message_average_count: result[0][2]}
 
 
 def get_date_some_days_ago(days: int):
     return datetime.today() - timedelta(days=days)
 
 
-def get_item_by_id(db: Session, advert_id: int):
+def get_item_by_id(db: Session, item_id: int):
     return db.query(models.Items).\
-        filter(models.Items.id == advert_id).first()
+        filter(models.Items.id == item_id).first()
 
 
 def clear_db(db: Session):

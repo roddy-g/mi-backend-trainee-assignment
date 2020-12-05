@@ -1,4 +1,4 @@
 from api.schemas import ItemStatRequest
 
 
-test_item_stat_request = ItemStatRequest(advert_id=1, interval=1)
+test_item_stat_request = ItemStatRequest(item_id=1, interval=1)
