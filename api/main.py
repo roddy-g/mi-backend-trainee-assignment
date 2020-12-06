@@ -38,7 +38,7 @@ def stat(item_stat_request: schemas.ItemStatRequest,
 
 @app.on_event("startup")
 @repeat_every(seconds=3600)  # 1 hour
-def get_stat() -> None:
+def get_stats_from_avito_for_all_records() -> None:
     db = SessionLocal()
     records = db.query(models.Items).all()
     for record in records:
@@ -51,11 +51,15 @@ def get_stat() -> None:
                                                     record.location_id)
         response = requests.get(url)
         data = response.json()
+        if response.status_code != 200:
+            continue
         try:
             advert_count = data['result']['totalCount']
             timestamp = datetime.now()
         except KeyError:
-            return 'No valid data'
+            print('No valid data for id={}, search phrase={}'.
+                  format(record.id, record.phrase))
+            continue
         item_stat = schemas.ItemStats(item_id=record.id,
                                       items_quantity=advert_count,
                                       timestamp=timestamp)

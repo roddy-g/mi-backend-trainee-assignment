@@ -31,8 +31,6 @@ def test_add_item():
     db = TestingSessionLocal()
     advert_id = database_functions.add_item(db, test_item).id
     assert advert_id == database_functions.get_item(db, test_item).id
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
-    results = engine.execute([YOUR_QUERY])
     database_functions.clear_db(db)
     db.close()
 
