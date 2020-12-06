@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from api.db import Base
+from api.database_connection import Base
 from api import database_functions
 from tests.fixtures.items import *
 from tests.fixtures.items_stats import *
@@ -31,6 +31,8 @@ def test_add_item():
     db = TestingSessionLocal()
     advert_id = database_functions.add_item(db, test_item).id
     assert advert_id == database_functions.get_item(db, test_item).id
+    engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)
+    results = engine.execute([YOUR_QUERY])
     database_functions.clear_db(db)
     db.close()
 

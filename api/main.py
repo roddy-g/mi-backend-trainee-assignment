@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
 from api import models, schemas, database_functions
-from api.db import engine, SessionLocal, get_db
+from api.database_connection import engine, SessionLocal, get_db
 from datetime import datetime
 import requests
 from fastapi_utils.tasks import repeat_every

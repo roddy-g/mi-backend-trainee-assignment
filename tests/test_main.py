@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from api.db import Base, get_db
+from api.database_connection import Base, get_db
 from api.main import app
 from api import database_functions
 from tests.fixtures.items import test_item
