@@ -37,7 +37,7 @@ def stat(item_stat_request: schemas.ItemStatRequest,
 
 
 @app.on_event("startup")
-@repeat_every(seconds=3)  # 1 hour
+@repeat_every(seconds=3600)  # 1 hour
 def get_stat() -> None:
     db = SessionLocal()
     records = db.query(models.Items).all()
@@ -56,7 +56,6 @@ def get_stat() -> None:
             timestamp = datetime.now()
         except KeyError:
             return 'No valid data'
-        print(advert_count)
         item_stat = schemas.ItemStats(item_id=record.id,
                                       items_quantity=advert_count,
                                       timestamp=timestamp)
