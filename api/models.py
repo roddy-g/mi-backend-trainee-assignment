@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from api.database_connection import Base
+from api.storage_connection import Base
 from sqlalchemy.schema import UniqueConstraint
 
 

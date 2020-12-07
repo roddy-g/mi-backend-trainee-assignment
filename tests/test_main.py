@@ -1,9 +1,10 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from api.database_connection import Base, get_db
+from api.storage_connection import Base
+from api.storage import get_db
 from api.main import app
-from api import database_functions
+from api import storage
 from tests.fixtures.items import test_item
 from tests.fixtures.items_stats import item_stats
 from tests.fixtures.item_stat_requests import test_item_stat_request
@@ -34,7 +35,7 @@ client = TestClient(app)
 
 def test_path_add():
     db = TestingSessionLocal()
-    database_functions.clear_db(db)
+    storage.clear_db(db)
     db.close()
     response = client.post(
         "/add",
@@ -57,13 +58,13 @@ def test_path_add():
     assert response.status_code == 400
     assert response.json()['detail'] == response_already_registered
     db = TestingSessionLocal()
-    database_functions.clear_db(db)
+    storage.clear_db(db)
     db.close()
 
 
 def test_path_stat():
     db = TestingSessionLocal()
-    database_functions.clear_db(db)
+    storage.clear_db(db)
     db.close()
     response = client.post(
         "/stat",
@@ -73,9 +74,9 @@ def test_path_stat():
     assert response.status_code == 400
     assert response.json() == {'detail': 'No such advert'}
     db = TestingSessionLocal()
-    database_functions.add_item(db, test_item)
+    storage.add_item(db, test_item)
     for stat in item_stats:
-        database_functions.add_stats(db, stat)
+        storage.add_stats(db, stat)
     db.close()
     response = client.post(
         "/stat",
@@ -86,7 +87,7 @@ def test_path_stat():
     print(response.json())
     assert response.json() == response_stat
     db = TestingSessionLocal()
-    database_functions.clear_db(db)
+    storage.clear_db(db)
     db.close()
     response = client.post(
         "/stat",

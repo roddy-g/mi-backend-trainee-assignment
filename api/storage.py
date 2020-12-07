@@ -2,6 +2,11 @@ from sqlalchemy.orm import Session
 from api import models, schemas
 from datetime import datetime, timedelta
 from sqlalchemy import func
+from api.storage_connection import SessionLocal
+
+MESSAGES = {'max_count': 'Максимальное количество объявлений за период',
+            'min_count': 'Минимальное количество объявлений за период',
+            'average_count': 'Среднее количество объявлений за период'}
 
 
 def get_item(db: Session, item: schemas.Item):
@@ -38,13 +43,10 @@ def get_item_stat(db: Session, item_get_stat: schemas.ItemStatRequest):
         func.avg(models.ItemsStats.advert_count)
     ).filter(models.ItemsStats.item_id == item_get_stat.item_id,
              models.ItemsStats.timestamp > date_from)
-    message_max_count = 'Максимальное количество объявлений за период'
-    message_min_count = 'Минимальное количество объявлений за период'
-    message_average_count = 'Среднее количество объявлений за период'
     if result[0][0] is not None:
-        return {message_max_count: result[0][0],
-                message_min_count: result[0][1],
-                message_average_count: result[0][2]}
+        return {MESSAGES['max_count']: result[0][0],
+                MESSAGES['min_count']: result[0][1],
+                MESSAGES['average_count']: result[0][2]}
 
 
 def get_date_some_days_ago(days: int):
@@ -64,3 +66,12 @@ def clear_db(db: Session):
     for record in records_to_delete:
         db.delete(record)
     db.commit()
+
+
+def get_db():
+    db = None
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
