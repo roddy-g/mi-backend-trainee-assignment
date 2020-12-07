@@ -4,9 +4,11 @@
 
 Запуск:
 
-   docker pull roddyg/avito:test-assignment 
+   ```
+   docker run roddyg/avito:test-assignment
   
-   docker docker run -p 80:80 roddyg/avito:test-assignment 
+   docker docker run -p 80:80 roddyg/avito:test-assignment
+   ``` 
 
 
 /add POST
