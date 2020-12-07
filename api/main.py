@@ -43,7 +43,8 @@ def stat(item_stat_request: schemas.ItemStatRequest,
     if item_stat:
         return item_stat
     else:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="No such advert")
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST,
+                            detail="No such advert")
 
 
 @app.on_event("startup")
