@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import Depends, FastAPI, HTTPException
-from api import models, schemas, storage
-from api.storage_connection import engine, SessionLocal
-from api.storage import get_db
+from app import models, schemas, storage
+from app.storage_connection import engine, SessionLocal
+from app.storage import get_db
 from datetime import datetime
 import requests
 from fastapi_utils.tasks import repeat_every

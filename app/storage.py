@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from api import models, schemas
+from app import models, schemas
 from datetime import datetime, timedelta
 from sqlalchemy import func
-from api.storage_connection import SessionLocal
+from app.storage_connection import SessionLocal
 
 MESSAGES = {'max_count': 'Максимальное количество объявлений за период',
             'min_count': 'Минимальное количество объявлений за период',

@@ -1,4 +1,4 @@
-from api.schemas import ItemStats
+from app.schemas import ItemStats
 from datetime import datetime
 
 timestamp = datetime.now()
