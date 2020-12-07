@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "avito_test"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = ["Roddy <per677199@yandex.ru>"]
 
