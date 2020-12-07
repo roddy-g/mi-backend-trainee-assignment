@@ -5,9 +5,9 @@
 Запуск:
 
    ```
-   docker run roddyg/avito:test-assignment
-  
-   docker docker run -p 80:80 roddyg/avito:test-assignment
+   git clone https://github.com/roddy-g/mi-backend-trainee-assignment.git
+   cd mi-backend-trainee-assignment
+   docker-compose up
    ``` 
 
 
@@ -30,3 +30,6 @@
 | ------------- | ------------- |------------- |
 | id  | Int  |Id запроса |
 | interval  | Int  |Интервал в днях |
+
+
+/docs - автоматически сгенерированная интерактивная документация API, позволяет использовать и проверять основные методы напрямую из браузера.
