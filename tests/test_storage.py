@@ -28,8 +28,9 @@ def db():
 
 def test_get_item(db):
     storage.add_item(db, test_item)
-    location_id = storage.get_item(db, test_item).location_id
-    assert location_id == test_item.location_id
+    item_from_db = storage.get_item(db, test_item)
+    assert item_from_db.location_id == test_item.location_id
+    assert item_from_db.phrase == test_item.phrase
 
 
 def test_add_item(db):
@@ -55,15 +56,8 @@ def test_get_item_stat(db):
 def test_get_date_some_days_ago():
     days_delta = 2
     today = datetime.today()
-    date_delta_days_ago = today - timedelta(days=2)
+    date_delta_days_ago = today - timedelta(days=days_delta)
     assert storage.get_date_some_days_ago(days_delta).date() == date_delta_days_ago.date()
-
-
-def test_get_item_by_id(db):
-    item_id = storage.add_item(db, test_item).id
-    item_from_db = storage.get_item(db, test_item)
-    assert item_from_db.phrase == test_item.phrase
-    assert item_from_db.location_id == test_item.location_id
 
 
 def test_clear_db(db):
