@@ -66,8 +66,11 @@ def get_stats_from_avito_for_all_records() -> None:
             print('No valid data for id={}, search phrase={}'.
                   format(record.id, record.phrase))
             continue
-        item_stat = schemas.ItemStats(item_id=record.id,
-                                      items_quantity=advert_count,
-                                      timestamp=timestamp)
-        storage.add_stats(db, item_stat)
+        item_stats_to_add = models. \
+            ItemsStats(item_id=record.id,
+                       advert_count=advert_count,
+                       timestamp=timestamp)
+        db.add(item_stats_to_add)
+        print(item_stats_to_add)
+    db.commit()
     db.close()
