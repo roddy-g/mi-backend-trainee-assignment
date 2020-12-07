@@ -53,7 +53,6 @@ def get_stats_from_avito_for_all_records() -> None:
     db = SessionLocal()
     records = db.query(models.Items).all()
     for record in records:
-        print(record)
         url = BASE_URL.format(record.phrase, record.location_id)
         response = requests.get(url)
         data = response.json()
@@ -71,6 +70,5 @@ def get_stats_from_avito_for_all_records() -> None:
                        advert_count=advert_count,
                        timestamp=timestamp)
         db.add(item_stats_to_add)
-        print(item_stats_to_add)
     db.commit()
     db.close()
