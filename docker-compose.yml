@@ -4,3 +4,6 @@ services:
     build: .
     ports:
       - "80:80"
+    env_file: .env
+    environment:
+      - API_KEY=${API_KEY}
