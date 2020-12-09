@@ -18,14 +18,6 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 Base.metadata.create_all(bind=engine)
 
 
-@pytest.fixture
-def db():
-    db = TestingSessionLocal()
-    yield db
-    storage.clear_db(db)
-    db.close()
-
-
 def test_get_item(db):
     storage.add_item(db, test_item)
     item_from_db = storage.get_item(db, test_item)
