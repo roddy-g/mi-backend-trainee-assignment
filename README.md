@@ -12,9 +12,7 @@
 или:
    
    ```
-   git clone https://github.com/roddy-g/mi-backend-trainee-assignment.git
-   cd mi-backend-trainee-assignment
-   docker run -p 80:80 roddyg/avito:test-assignment
+  docker run -p 80:80 roddyg/avito:test-assignment
    ``` 
     
 
