@@ -7,16 +7,17 @@ from datetime import datetime
 import requests
 from fastapi_utils.tasks import repeat_every
 from http import HTTPStatus
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
+API_KEY = os.getenv('API_KEY')
 BASE_URL = 'https://m.avito.ru/api/9/items?' \
-              'key=af0deccbgcgidddjgnvljitntccdduijhdinfgjgfjir&query={}&' \
+              'key={}&query={}&' \
               'locationId={}&context=H4sIAAAAAAAA_wFCAL3_YToxOntzOjU6Inhf' \
               'c2d0IjtzOjQwOiJhZWQxY2ZlNzQ4OTE5MDdkM2E3N2JlYjUyNWZlZDI0NmEyN' \
               '2MwNzNlIjt9e-eh1UIAAAA&' \
               'page=1&display=list&limit=30'
-
 INTERVAL_IN_SECONDS = 3600  # 1 hour
-
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
@@ -53,7 +54,7 @@ def get_stats_from_avito_for_all_records() -> None:
     db = SessionLocal()
     records = db.query(models.Items).all()
     for record in records:
-        url = BASE_URL.format(record.phrase, record.location_id)
+        url = BASE_URL.format(API_KEY, record.phrase, record.location_id)
         response = requests.get(url)
         data = response.json()
         if response.status_code != HTTPStatus.OK:
