@@ -17,7 +17,7 @@
 Необходимо передать по ключу -e передать переменную окружения API_KEY, которая используется при выполнении запросов. 
    
    ```
-  docker run -p 80:80 -e API_KEY=''  roddyg/avito:test-assignment
+  docker run -p 80:80 -e API_KEY='' roddyg/avito:test-assignment
    ``` 
     
 
