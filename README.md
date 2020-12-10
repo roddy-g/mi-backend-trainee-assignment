@@ -2,9 +2,10 @@
 # mi-backend-trainee-assignment
 Реализован JSON API cервис для сбора информации о количестве обьявлений по определенному запросу.
 
-Необходимо перед запуском определить в файле .env переменную окружения API_KEY, которая используется при выполнении запросов.
 
 Запуск:
+
+Необходимо перед запуском описать в файле .env переменную окружения API_KEY, которая используется при выполнении запросов. 
 
    ```
    git clone https://github.com/roddy-g/mi-backend-trainee-assignment.git
@@ -12,9 +13,11 @@
    docker-compose up
    ``` 
 или:
+
+Необходимо передать по ключу -e передать переменную окружения API_KEY, которая используется при выполнении запросов. 
    
    ```
-  docker run -p 80:80 roddyg/avito:test-assignment
+  docker run -p 80:80 -e API_KEY=''  roddyg/avito:test-assignment
    ``` 
     
 
